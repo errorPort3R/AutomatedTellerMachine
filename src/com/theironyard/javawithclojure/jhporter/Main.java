@@ -11,41 +11,57 @@ public class Main
         return !name.equals(" ");
     }
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args)
     {
         //declare variables
+        String EXIT_STRING = "quit";
+        double amount=0;
         int menuSelection = 0;
-        String customerName;
+        String customerName= "";
         Teller teller = new Teller();
-        Account customer;
+        Accounts theAccounts = Accounts.getTheAccounts();
 
 
         //run teller console
-        System.out.println("Welcome to the First National Bank If The Iron Yard!");
-        System.out.println("Please Enter Your Name: ");
-        customerName = input.nextLine();
-        if (customerName.equals(""))
-        {
-            throw new Exception("Not a valid name!");
-        }
-        customer = new Account(customerName);
+        System.out.println("Welcome to the First National Bank of The Iron Yard!");
 
-
-        while (menuSelection != 3)
+        while (!customerName.equalsIgnoreCase("quit"))
         {
-            menuSelection = teller.displayMainMenu(customer);
-            switch(menuSelection)
+            System.out.println("Please Enter Your Name(type quit to exit): ");
+            customerName = input.nextLine();
+
+            if (customerName.equalsIgnoreCase("quit"))
             {
-                case 1:
-                    teller.checkBalance(customer);
-                    break;
-                case 2:
-                    teller.withdraw(customer);
-                    break;
-                case 3:
-                    teller.cancel();
-                    break;
+                break;
+            }
+            else if (!theAccounts.validateAccount(customerName));
+            {
+                System.out.println("How Much would you like to deposit initially?");
+                String temp = input.nextLine();
+                if (teller.validateDeposit(temp))
+                {
+                    amount = Integer.valueOf(temp);
+                }
+
+                theAccounts.createAccount(customerName, amount);
+            }
+            while (menuSelection != 3) {
+                menuSelection = teller.displayMainMenu(customerName);
+                switch (menuSelection) {
+                    case 1:
+                        teller.checkBalance(customerName);
+                        break;
+                    case 2:
+                        teller.withdraw(customerName);
+                        break;
+                    case 3:
+                        teller.cancel();
+                        break;
+                    default:
+                        System.err.printf("\nNot a valid selection!");
+                }
             }
         }
+
     }
 }

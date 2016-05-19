@@ -5,6 +5,8 @@ package com.theironyard.javawithclojure.jhporter;
  */
 public class Teller
 {
+    Accounts theAccounts = Accounts.getTheAccounts();
+
     public String getIdentity()
     {
         String name;
@@ -13,52 +15,56 @@ public class Teller
         return name;
     }
 
-    public int displayMainMenu(Account customer) throws Exception
+    public int displayMainMenu(String name)
     {
         //declare variables
         String choice;
         int menuItem=0;
         double balance = 100.0;
 
+
         while(menuItem < 1 || menuItem > 3)
         {
-            System.out.printf("\n%s, how may I help you today?(please pick and option from the list below)", customer.getName());
+            System.out.printf("\n%s, how may I help you today?(please pick and option from the list below)", name);
             System.out.printf("\n 1.Check Balance\n 2.Withdraw Funds\n 3.Cancel\n");
             choice = Main.input.nextLine();
             menuItem = Integer.valueOf(choice);
             if (menuItem < 1 || menuItem > 3)
             {
-                throw new Exception("Not a valid choice!!!! Try again!!!");
+                System.err.printf("\nNot a valid choice!!!! Try again!!!");
             }
         }
         return menuItem;
     }
 
-    public void checkBalance(Account customer)
+    public void checkBalance(String name)
     {
-        System.out.printf("\n%s, your current balance is $%.2f.", customer.getName(), customer.getBalance());
+        System.out.printf("\n%s, your current balance is $%.2f.", name, theAccounts.getBalance(name));
     }
 
-    public void withdraw(Account customer) throws Exception
+    public void withdraw(String name)
     {
+        //declare variables
         String amount;
-        double amountToWithdraw = 0;
+        double amountToWithdraw = -1.0;
+
+        while(amountToWithdraw >=0 && amountToWithdraw > theAccounts.getBalance(name))
         System.out.println("How much would you like to withdraw?");
         amount = Main.input.nextLine();
         amountToWithdraw = Double.valueOf(amount);
-        //amountToWithdraw = Main.input.nextDouble();
-        if (amountToWithdraw>customer.getBalance())
+
+        if (amountToWithdraw > theAccounts.getBalance(name))
         {
-            throw new Exception("Insufficient Funds!!!!");
+            System.err.printf("\nInsufficient Funds!!!!");
         }
-        else if (amountToWithdraw <= customer.getBalance())
+        else if (amountToWithdraw <= theAccounts.getBalance(name))
         {
-            customer.setBalance(customer.getBalance() - amountToWithdraw);
-            System.out.printf("\n%s, Amount Withdrawn: $%.2f\nRemaining Balance: $%.2f.", customer.getName(), amountToWithdraw, customer.getBalance());
+            theAccounts.withdraw(name, amountToWithdraw);
+            System.out.printf("\n%s, Amount Withdrawn: $%.2f\nRemaining Balance: $%.2f.", name, amountToWithdraw, theAccounts.getBalance(name));
         }
         else
         {
-            throw new Exception("Not an amount.  Try again");
+            System.err.printf("\nNot an amount.  Try again!");
         }
 
     }
@@ -67,5 +73,11 @@ public class Teller
     {
         System.out.println("Thank you and please come again!");
     }
+
+    public boolean validateDeposit(String amount)
+    {
+        return (Integer.valueOf(amount)>=0);
+    }
+
 
 }
