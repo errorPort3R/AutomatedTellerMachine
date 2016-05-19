@@ -8,7 +8,7 @@ public class Main
 
     public boolean isValidCustomer(String name)
     {
-        return name != " ";
+        return !name.equals(" ");
     }
 
     public static void main(String[] args) throws Exception
