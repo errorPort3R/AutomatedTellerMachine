@@ -5,8 +5,6 @@ package com.theironyard.javawithclojure.jhporter;
  */
 public class Teller
 {
-    Account customer;
-
     public String getIdentity()
     {
         String name;
@@ -21,7 +19,6 @@ public class Teller
         String choice;
         int menuItem=0;
         double balance = 100.0;
-        this.customer = customer;
 
         while(menuItem < 1 || menuItem > 3)
         {
@@ -37,12 +34,12 @@ public class Teller
         return menuItem;
     }
 
-    public void checkBalance()
+    public void checkBalance(Account customer)
     {
         System.out.printf("\n%s, your current balance is $%.2f.", customer.getName(), customer.getBalance());
     }
 
-    public void withdraw() throws Exception
+    public void withdraw(Account customer) throws Exception
     {
         String amount;
         double amountToWithdraw = 0;
@@ -68,7 +65,7 @@ public class Teller
 
     public void cancel()
     {
-        System.out.println("Thank you for and please come again!");
+        System.out.println("Thank you and please come again!");
     }
 
 }

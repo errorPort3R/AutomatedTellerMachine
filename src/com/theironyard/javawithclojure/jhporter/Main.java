@@ -37,17 +37,15 @@ public class Main
             switch(menuSelection)
             {
                 case 1:
-                    teller.checkBalance();
+                    teller.checkBalance(customer);
                     break;
                 case 2:
-                    teller.withdraw();
+                    teller.withdraw(customer);
                     break;
                 case 3:
                     teller.cancel();
+                    break;
             }
-
         }
-
-
     }
 }
