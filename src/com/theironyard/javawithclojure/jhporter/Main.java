@@ -22,13 +22,14 @@ public class Main
         //run teller console
         System.out.println("Welcome to the First National Bank of The Iron Yard!");
 
-        int menuSelection=0;
+
         while (isValidCustomer(customerName))
         {
             customerName = teller.getIdentity();
             if (isValidCustomer(customerName))
             {
-                while(menuSelection != 3 || menuSelection != 4)
+                int menuSelection=0;
+                while(menuSelection != 3 && menuSelection != 4)
                 {
                     menuSelection = 0;
                     menuSelection = teller.displayMainMenu(customerName);
@@ -48,7 +49,7 @@ public class Main
                             teller.cancel();
                             break;
                         default:
-                            System.err.printf("\nNot a valid selection!");
+                            System.out.printf("\nNot a valid selection!");
                             break;
                     }
                 }
