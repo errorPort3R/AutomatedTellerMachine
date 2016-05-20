@@ -9,10 +9,36 @@ public class Teller
 
     public String getIdentity()
     {
-        String name;
-        System.out.println("Please Enter Your Name: ");
-        name = Main.input.nextLine();
-        return name;
+        String customerName;
+        boolean validAmount = false;
+        double amount=0.0;
+        System.out.printf("\nPlease Enter Your Name(type %s to exit): ", Main.EXIT_STRING);
+        customerName = Main.input.nextLine();
+
+        if(customerName.equalsIgnoreCase(Main.EXIT_STRING))
+        {
+            return customerName;
+        }
+        else if (theAccounts.validateAccount(customerName))
+        {
+            System.out.printf("\nWelcome back %s.", customerName);
+        }
+        else if (!theAccounts.validateAccount(customerName) && !customerName.equalsIgnoreCase(Main.EXIT_STRING)) ;
+        {
+            while(!validAmount) {
+                System.out.println("\nYou don't seem to have an account.");
+                System.out.println("How much would you like to deposit initially?");
+                String temp = Main.input.nextLine();
+                if (!temp.isEmpty() && validateDeposit(temp)) {
+                    amount = Double.valueOf(temp);
+                    theAccounts.createAccount(customerName, amount);
+                    validAmount = true;
+                } else {
+                    System.out.println("Not a valid amount!");
+                }
+            }
+        }
+        return customerName;
     }
 
     public int displayMainMenu(String name)
@@ -22,16 +48,15 @@ public class Teller
         int menuItem=0;
         double balance = 100.0;
 
-
         while(menuItem < 1 || menuItem > 3)
         {
             System.out.printf("\n%s, how may I help you today?(please pick and option from the list below)", name);
-            System.out.printf("\n 1.Check Balance\n 2.Withdraw Funds\n 3.Cancel\n");
+            System.out.printf("\n 1.Check Balance\n 2.Withdraw Funds\n 3.Close Account\n 4.Cancel\n");
             choice = Main.input.nextLine();
             menuItem = Integer.valueOf(choice);
             if (menuItem < 1 || menuItem > 3)
             {
-                System.err.printf("\nNot a valid choice!!!! Try again!!!");
+                System.out.printf("\nNot a valid choice!!!! Try again!!!");
             }
         }
         return menuItem;
@@ -46,27 +71,30 @@ public class Teller
     {
         //declare variables
         String amount;
-        double amountToWithdraw = -1.0;
+        double amountToWithdraw = 1.0;
 
-        while(amountToWithdraw >=0 && amountToWithdraw > theAccounts.getBalance(name))
-        System.out.println("How much would you like to withdraw?");
-        amount = Main.input.nextLine();
-        amountToWithdraw = Double.valueOf(amount);
+        while(amountToWithdraw >=0 && amountToWithdraw < theAccounts.getBalance(name))
+        {
+            System.out.println("\nHow much would you like to withdraw?");
+            amount = Main.input.nextLine();
+            amountToWithdraw = Double.valueOf(amount);
 
-        if (amountToWithdraw > theAccounts.getBalance(name))
-        {
-            System.err.printf("\nInsufficient Funds!!!!");
+            if (amountToWithdraw > theAccounts.getBalance(name)) {
+                System.err.printf("\nInsufficient Funds!!!!");
+            } else if (amountToWithdraw <= theAccounts.getBalance(name)) {
+                theAccounts.withdraw(name, amountToWithdraw);
+                System.out.printf("\n%s, Amount Withdrawn: $%.2f\nRemaining Balance: $%.2f.", name, amountToWithdraw, theAccounts.getBalance(name));
+            } else {
+                System.out.printf("\nNot an amount. Try again!");
+            }
         }
-        else if (amountToWithdraw <= theAccounts.getBalance(name))
-        {
-            theAccounts.withdraw(name, amountToWithdraw);
-            System.out.printf("\n%s, Amount Withdrawn: $%.2f\nRemaining Balance: $%.2f.", name, amountToWithdraw, theAccounts.getBalance(name));
-        }
-        else
-        {
-            System.err.printf("\nNot an amount.  Try again!");
-        }
+    }
 
+    public void closeAccount(String name)
+    {
+        double closingBalance = theAccounts.removeAccount(name);
+        System.out.printf("\nSorry to lose your business.");
+        System.out.printf("\nHere's the closing balance of $%.2f.", closingBalance);
     }
 
     public void cancel()
@@ -76,7 +104,7 @@ public class Teller
 
     public boolean validateDeposit(String amount)
     {
-        return (Integer.valueOf(amount)>=0);
+        return (Double.valueOf(amount)>=0);
     }
 
 

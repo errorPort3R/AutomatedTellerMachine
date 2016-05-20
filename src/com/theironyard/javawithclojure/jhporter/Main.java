@@ -5,63 +5,56 @@ import java.util.Scanner;
 public class Main
 {
     public static Scanner input = new Scanner(System.in);
+    public static final String EXIT_STRING = "quit";
 
-    public boolean isValidCustomer(String name)
+    public static boolean isValidCustomer(String name)
     {
-        return !name.equals(" ");
+        return !name.equalsIgnoreCase(EXIT_STRING);
     }
 
     public static void main(String[] args)
     {
         //declare variables
-        String EXIT_STRING = "quit";
         double amount=0;
-        int menuSelection = 0;
         String customerName= "";
         Teller teller = new Teller();
-        Accounts theAccounts = Accounts.getTheAccounts();
-
 
         //run teller console
         System.out.println("Welcome to the First National Bank of The Iron Yard!");
 
-        while (!customerName.equalsIgnoreCase("quit"))
+        int menuSelection=0;
+        while (isValidCustomer(customerName))
         {
-            System.out.println("Please Enter Your Name(type quit to exit): ");
-            customerName = input.nextLine();
-
-            if (customerName.equalsIgnoreCase("quit"))
+            customerName = teller.getIdentity();
+            if (isValidCustomer(customerName))
             {
-                break;
-            }
-            else if (!theAccounts.validateAccount(customerName));
-            {
-                System.out.println("How Much would you like to deposit initially?");
-                String temp = input.nextLine();
-                if (teller.validateDeposit(temp))
+                while(menuSelection != 3 || menuSelection != 4)
                 {
-                    amount = Integer.valueOf(temp);
+                    menuSelection = 0;
+                    menuSelection = teller.displayMainMenu(customerName);
+                    switch (menuSelection)
+                    {
+                        case 1:
+                            teller.checkBalance(customerName);
+                            break;
+                        case 2:
+                            teller.withdraw(customerName);
+                            break;
+                        case 3:
+                            teller.closeAccount(customerName);
+                            teller.cancel();
+                            break;
+                        case 4:
+                            teller.cancel();
+                            break;
+                        default:
+                            System.err.printf("\nNot a valid selection!");
+                            break;
+                    }
                 }
+            }
 
-                theAccounts.createAccount(customerName, amount);
-            }
-            while (menuSelection != 3) {
-                menuSelection = teller.displayMainMenu(customerName);
-                switch (menuSelection) {
-                    case 1:
-                        teller.checkBalance(customerName);
-                        break;
-                    case 2:
-                        teller.withdraw(customerName);
-                        break;
-                    case 3:
-                        teller.cancel();
-                        break;
-                    default:
-                        System.err.printf("\nNot a valid selection!");
-                }
-            }
         }
-
+        System.out.println("Teller shutting down.");
     }
 }
