@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Accounts
 {
     //declare variables
-    public static Accounts theAccounts;
+    private static Accounts theAccounts;
     private HashMap<String, Double> account = new HashMap<String, Double>();
 
     //constructor
