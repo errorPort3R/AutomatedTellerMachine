@@ -54,8 +54,7 @@ public class Main
                     }
                 }
             }
-
         }
-        System.out.println("Teller shutting down.");
+        System.out.printf("\nTeller shutting down.");
     }
 }

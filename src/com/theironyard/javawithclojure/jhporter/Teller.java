@@ -9,8 +9,10 @@ public class Teller
 {
     Accounts theAccounts = Accounts.getTheAccounts();
 
+    //returns the Identifying name on the account
     public String getIdentity()
     {
+        //declare variables
         String customerName;
         boolean validAmount = false;
         double amount=0.0;
@@ -28,15 +30,19 @@ public class Teller
         }
         else if (!theAccounts.validateAccount(customerName))
         {
-            while(!validAmount) {
+            while(!validAmount)
+            {
                 System.out.printf("\nYou don't seem to have an account.");
                 System.out.printf("\nHow much would you like to deposit initially?");
                 String temp = Main.input.nextLine();
-                if (!temp.isEmpty() && validateDeposit(temp)) {
+                if (!temp.isEmpty() && validateDeposit(temp))
+                {
                     amount = Double.valueOf(temp);
                     theAccounts.createAccount(customerName, amount);
                     validAmount = true;
-                } else {
+                }
+                else
+                {
                     System.out.printf("\nNot a valid amount!");
                 }
             }
@@ -44,6 +50,7 @@ public class Teller
         return customerName;
     }
 
+    //displays options and returns the choice
     public int displayMainMenu(String name)
     {
         //declare variables
@@ -73,11 +80,13 @@ public class Teller
         return menuItem;
     }
 
+    //returns the balance associated with an Identity name
     public void checkBalance(String name)
     {
         System.out.printf("\n%s, your current balance is $%.2f.", name, theAccounts.getBalance(name));
     }
 
+    //withdraws an amount from a specific account
     public void withdraw(String name)
     {
         //declare variables
@@ -107,6 +116,7 @@ public class Teller
         }
     }
 
+    //removes the account from the dataset, and returns the amount that was in the account
     public void closeAccount(String name)
     {
         double closingBalance = theAccounts.removeAccount(name);
@@ -114,11 +124,13 @@ public class Teller
         System.out.printf("\nHere's the closing balance of $%.2f.", closingBalance);
     }
 
+    //exit statement
     public void cancel()
     {
-        System.out.printf("\nThank you and please come again!");
+        System.out.printf("\nThank you and please come again!\n");
     }
 
+    //validates that a deposit is a usable value
     public boolean validateDeposit(String amount)
     {
         boolean isValid = false;
@@ -128,6 +140,4 @@ public class Teller
         }
         return isValid;
     }
-
-
 }
